@@ -21,11 +21,7 @@ namespace Malgo.GMTK.Player
         [SerializeField] private float jumpForce;
         private float lastJumpTime;
         private bool canJump = true;
-        private bool isJumping;
-
-        [Header("Slope")]
-        [SerializeField] private float maxSlopeAngle;
-        [SerializeField] private float slopeMultiplier;
+        private bool isJumping = false;
 
         private RaycastHit slopeHit;
 
@@ -35,10 +31,8 @@ namespace Malgo.GMTK.Player
         [Space]
         [SerializeField] private Rigidbody rb;
 
-
         Vector3 moveDirection;
         Vector2 inputVector;
-        private bool isOnSlope;
 
         void Start()
         {
@@ -83,7 +77,6 @@ namespace Malgo.GMTK.Player
                 isJumping = true;
                 lastJumpTime = Time.time;
             }
-
         }
          
         private void GroundCheck()
@@ -92,14 +85,7 @@ namespace Malgo.GMTK.Player
 
             rb.linearDamping = SetDrag();
 
-            //if (isGrounded && inputVector == Vector2.zero)
-            //{
-            //    rb.linearDamping = groundDrag;
-            //}
-            //else
-            //{
-            //    rb.linearDamping = 0;
-            //}
+
         }
 
         private void SetJumpState()
@@ -133,40 +119,8 @@ namespace Malgo.GMTK.Player
         private void MovePlayer()
         {
             moveDirection = orientation.forward * inputVector.y + orientation.right * inputVector.x;
-            
-
-            //if (isOnSlope)
-            //{
-            //    rb.AddForce(GetSlopeMoveDirection() * moveSpeed * slopeMultiplier, ForceMode.Force);
-
-            //    if (rb.linearVelocity.y > 0)
-            //    {
-            //        rb.AddForce(Vector3.down * 80f, ForceMode.Force);
-            //    }
-            //}
-
-            //rb.useGravity = !isOnSlope;
-
 
             rb.AddForce(moveDirection.normalized * moveSpeed * Time.deltaTime * moveSpeedMultiplier, ForceMode.Force);
         }
-
-        //private bool OnSlope()
-        //{
-        //    if (Physics.Raycast(groundCheckPoint.position, Vector3.down, out slopeHit, 0.2f, groundLayer))
-        //    {
-        //        float angle = Vector3.Angle(slopeHit.normal, Vector3.up);
-
-        //        Debug.Log(angle);
-
-        //        return angle < maxSlopeAngle && angle != 0;
-        //    }
-        //    return false;
-        //}
-
-        //private Vector3 GetSlopeMoveDirection()
-        //{
-        //    return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
-        //}
     }
 }
