@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 
@@ -10,8 +11,12 @@ namespace Malgo.GMTK.Maps
         [SerializeField] private SlicedFilledImage heatBar;
         [SerializeField] private Gradient heatGradient;
 
+        [SerializeField] private TMP_Text timer;
+
         private void Update()
         {
+            timer.text = $"{Mathf.FloorToInt(Time.time - gameManager.startTime)}";
+
             heatBar.fillAmount = gameManager.CurrentHeatNormalized;
             heatBar.color = heatGradient.Evaluate(gameManager.CurrentHeatNormalized);
         }

@@ -191,7 +191,7 @@ namespace Malgo.GMTK.Player
 
         private void TryJump()
         {
-            if (canJump && !isSliding)
+            if (canJump)
             {
                 rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 

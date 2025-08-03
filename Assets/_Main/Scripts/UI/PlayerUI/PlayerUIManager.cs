@@ -50,7 +50,7 @@ namespace Malgo.GMTK.UI
 
         private void Update()
         {
-            playerSpeed.text = $"{playerRigidbody.linearVelocity.magnitude:F2}";
+            playerSpeed.text = $"{playerRigidbody.linearVelocity.magnitude:F1}";
         }
 
         private void OnDisable()

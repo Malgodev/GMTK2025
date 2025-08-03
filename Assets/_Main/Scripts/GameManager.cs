@@ -1,4 +1,5 @@
 using Malgo.GMTK.Player;
+using System;
 using UnityEngine;
 
 namespace Malgo.GMTK
@@ -12,12 +13,28 @@ namespace Malgo.GMTK
 
         [SerializeField] private Rigidbody playerRB;
 
+        public bool IsGameOver;
+
         public float CurrentHeat => currentHeat;
         public float CurrentHeatNormalized => (currentHeat - minHeat) / (maxHeat - minHeat);
+
+        public float startTime;
+
+        public static event Action<float> OnGameOver;
 
         private void Awake()
         {
             currentHeat = minHeat;
+        }
+
+        private void Start()
+        {
+            startTime = Time.time;
+
+            double currentHz = Screen.currentResolution.refreshRateRatio.value;
+            Debug.Log(currentHz);
+            Application.targetFrameRate = (int) (currentHz);
+
         }
 
         private void Update()
@@ -25,9 +42,14 @@ namespace Malgo.GMTK
             float currentSpeed = playerRB.linearVelocity.magnitude;
             float overSpeed = (currentSpeed / 10f - 1f) * heatIncreaseRate;
 
-            Debug.Log($"Current Speed: {currentSpeed}, Over Speed: {overSpeed}");
-
             currentHeat = Mathf.Clamp(currentHeat + overSpeed * Time.deltaTime, minHeat, maxHeat);
+
+            if (currentHeat >= maxHeat && !IsGameOver)
+            {
+                Time.timeScale = 0f;
+                OnGameOver?.Invoke(Time.time - startTime);
+                IsGameOver = true;
+            }
         }
     }
 }
