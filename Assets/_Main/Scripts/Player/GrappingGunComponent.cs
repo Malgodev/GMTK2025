@@ -17,6 +17,7 @@ namespace Malgo.GMTK.Player
 
         [Header("Grapple Stat")]
         [SerializeField] public LayerMask groundMask;
+        [SerializeField] private float grappleRadius;
         [SerializeField] private float maxDistance = 100f;
         private SpringJoint joint;
         private RaycastHit grappleHit;
@@ -71,15 +72,13 @@ namespace Malgo.GMTK.Player
 
         private void ShootGrapple()
         {
-            if (Physics.Raycast(cam.position, cam.forward, out grappleHit, maxDistance, groundMask))
+            // SphereCast creates a sphere-shaped raycast for more forgiving hit detection
+            if (Physics.SphereCast(cam.position, grappleRadius, cam.forward, out grappleHit, maxDistance, groundMask))
             {
-                // Fix: Assign the grapple point from the hit
                 grapplePoint = grappleHit.point;
-
                 joint = player.gameObject.AddComponent<SpringJoint>();
                 joint.autoConfigureConnectedAnchor = false;
-                joint.connectedAnchor = grapplePoint; // Now this will work correctly
-
+                joint.connectedAnchor = grapplePoint;
                 float distance = Vector3.Distance(player.position, grapplePoint);
                 joint.maxDistance = distance * springMaxDistance;
                 joint.minDistance = distance * springMinDistance;
